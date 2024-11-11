@@ -1,8 +1,22 @@
 @extends('cLayout.system')
 
 @section('content')
+    <!-- Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    @if(session()->has("success"))
+        <div class="alert alert-success">
+            <span>{{ session()->get("success") }}</span>
+        </div>
+    @endif
     <h2 class="mb-4 text-center">Application Details</h2>
-
 
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-dark mb-4" data-toggle="modal" data-target="#application-update">
@@ -22,7 +36,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- Edit Form -->
-                    <form method="POST" action="{{ route('profiles.update', $profile->id) }}">
+                    <form id="updateProfile" method="POST" action="{{ route('profiles.update', $profile->id) }}">
                         @csrf
                         @method('PUT')
 
@@ -47,68 +61,136 @@
                                 value="{{ old('phone', $profile->phone) }}" required>
                         </div>
 
-                        <!-- Education History (Multiple Entries) -->
-                        <div class="form-group mt-5 mb-5" id="education_fields">
-                            <label for="education">Education History</label>
-                            @foreach ($profile->education as $index => $education)
-                                <div class="education-entry">
-                                    <input type="text" name="education[{{ $index }}][institution_name]"
-                                        class="form-control mb-2" placeholder="Institution Name"
-                                        value="{{ old('education.' . $index . '.institution_name', $education['institution_name']) }}"
-                                        required>
-                                    <input type="text" name="education[{{ $index }}][degree]"
-                                        class="form-control mb-2" placeholder="Degree"
-                                        value="{{ old('education.' . $index . '.degree', $education['degree']) }}" required>
-                                    <input type="text" name="education[{{ $index }}][year_of_completion]"
-                                        class="form-control mb-2" placeholder="Year of Completion"
-                                        value="{{ old('education.' . $index . '.year_of_completion', $education['year_of_completion']) }}"
-                                        required>
-                                    <button type="button" class="btn btn-danger remove-education">Remove</button>
-                                </div>
-                            @endforeach
-                            <button type="button" class="btn btn-primary mt-2" id="add_education">Add Education</button>
-                        </div>
 
-                        <!-- Work Experience (Multiple Entries) -->
-                        <div class="form-group" id="work_experience_fields">
-                            <label for="work_experience">Work Experience</label>
-                            @foreach ($profile->works as $index => $experience)
-                                <div class="work-experience-entry">
-                                    <input type="text" name="work_experience[{{ $index }}][company_name]"
-                                        class="form-control mb-2" placeholder="Company Name"
-                                        value="{{ old('work_experience.' . $index . '.company_name', $experience['company_name']) }}"
-                                        required>
-                                    <input type="text" name="work_experience[{{ $index }}][role]"
-                                        class="form-control mb-2" placeholder="Role"
-                                        value="{{ old('work_experience.' . $index . '.role', $experience['role']) }}"
-                                        required>
-                                    <input type="text" name="work_experience[{{ $index }}][duration]"
-                                        class="form-control mb-2" placeholder="Duration"
-                                        value="{{ old('work_experience.' . $index . '.duration', $experience['duration']) }}"
-                                        required>
-                                    <button type="button" class="btn btn-danger remove-work-experience">Remove</button>
-                                </div>
-                            @endforeach
-                            <button type="button" class="btn btn-primary mt-2" id="add_work_experience">Add Work
-                                Experience</button>
-                        </div>
 
-                        <!-- Skills -->
-                        <div class="form-group">
-                            <label for="skills">Skills</label>
-                            @foreach ($profile->skills as $index => $skill)
-                                <div class="skill-entry mb-2">
-                                    <input type="text" name="skills[{{ $index }}]" class="form-control mb-2"
-                                        value="{{ $skill['name'] }}" placeholder="{{ $skill['name'] }}" required>
-                                    <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                        <div id="accordion">
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne">
+                                            Education History
+                                        </button>
+                                    </h5>
                                 </div>
-                            @endforeach
-                            <button type="button" class="btn btn-primary mt-2" id="add_skill">Add Skill</button>
+
+                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <!-- Education History (Multiple Entries) -->
+                                        <div class="form-group mt-5 mb-5" id="education_fields">
+                                            <label for="education">Education History</label>
+                                            @foreach ($profile->education as $index => $education)
+                                                <div class="education-entry">
+                                                    <input type="text"
+                                                        name="education[{{ $index }}][institution_name]"
+                                                        class="form-control mb-2" placeholder="Institution Name"
+                                                        value="{{ old('education.' . $index . '.institution_name', $education['institution_name']) }}"
+                                                        required>
+                                                    <input type="text" name="education[{{ $index }}][degree]"
+                                                        class="form-control mb-2" placeholder="Degree"
+                                                        value="{{ old('education.' . $index . '.degree', $education['degree']) }}"
+                                                        required>
+                                                    <input type="text"
+                                                        name="education[{{ $index }}][year_of_completion]"
+                                                        class="form-control mb-2" placeholder="Year of Completion"
+                                                        value="{{ old('education.' . $index . '.year_of_completion', $education['year_of_completion']) }}"
+                                                        required>
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-sm remove-education">Remove</button>
+                                                </div>
+                                            @endforeach
+                                            <button type="button" class="btn btn-primary btn-sm mt-2" id="add_education">Add
+                                                Education</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                                            data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Work Experience
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <!-- Work Experience (Multiple Entries) -->
+                                        <div class="form-group" id="work_experience_fields">
+                                            <label for="work_experience">Work Experience</label>
+                                            @foreach ($profile->works as $index => $experience)
+                                                <div class="work-experience-entry">
+                                                    <input type="text"
+                                                        name="work_experience[{{ $index }}][company_name]"
+                                                        class="form-control mb-2" placeholder="Company Name"
+                                                        value="{{ old('work_experience.' . $index . '.company_name', $experience['company_name']) }}"
+                                                        required>
+                                                    <input type="text"
+                                                        name="work_experience[{{ $index }}][role]"
+                                                        class="form-control mb-2" placeholder="Role"
+                                                        value="{{ old('work_experience.' . $index . '.role', $experience['role']) }}"
+                                                        required>
+                                                    <input type="text"
+                                                        name="work_experience[{{ $index }}][duration]"
+                                                        class="form-control mb-2" placeholder="Duration"
+                                                        value="{{ old('work_experience.' . $index . '.duration', $experience['duration']) }}"
+                                                        required>
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-sm remove-work-experience">Remove</button>
+                                                </div>
+                                            @endforeach
+                                            <button type="button" class="btn btn-primary btn-sm mt-2"
+                                                id="add_work_experience">Add Work
+                                                Experience</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingThree">
+                                    <h5 class="mb-0">
+                                        <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                                            data-target="#collapseThree" aria-expanded="false"
+                                            aria-controls="collapseThree">
+                                            Skills
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <!-- Skills -->
+                                        <div class="form-group">
+                                            <label for="skills">Skills</label>
+                                            @foreach ($profile->skills as $index => $skill)
+                                                <div class="skill-entry mb-2">
+                                                    <input type="text" name="skills[{{ $index }}]"
+                                                        class="form-control mb-2" value="{{ $skill['name'] }}"
+                                                        placeholder="{{ $skill['name'] }}" required>
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-sm remove-skill">Remove</button>
+                                                </div>
+                                            @endforeach
+                                            <button type="button"
+                                            class="btn btn-primary btn-sm mt-2" id="add_skill">Add
+                                                Skill</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-success">Update Application</button>
+                            <button type="submit"
+                                id="editApplication"
+                                class="btn btn-success">Update Application</button>
                         </div>
                     </form>
                 </div>
@@ -242,6 +324,8 @@
             $(document).on('click', '.remove-skill', function() {
                 $(this).closest('.skill-entry').remove();
             });
+
+
         </script>
     @endsection
 @endsection
