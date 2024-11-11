@@ -116,6 +116,10 @@ class ProfilesController extends Controller
 
         $profile->save();
 
+        if (!isset($validated['education']) || !isset($validated['education'])  || !isset($validated['education'])) {
+            return redirect()->back()->withErrors(['validation' => 'some data is missing']);
+        }
+
         $profile->education()->delete();
         $profile->works()->delete();
         $profile->skills()->delete();
