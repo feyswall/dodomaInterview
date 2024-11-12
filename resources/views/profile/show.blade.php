@@ -11,9 +11,9 @@
             </ul>
         </div>
     @endif
-    @if(session()->has("success"))
+    @if (session()->has('success'))
         <div class="alert alert-success">
-            <span>{{ session()->get("success") }}</span>
+            <span>{{ session()->get('success') }}</span>
         </div>
     @endif
     <h2 class="mb-4 text-center">Application Details</h2>
@@ -67,8 +67,8 @@
                             <div class="card">
                                 <div class="card-header" id="headingOne">
                                     <h5 class="mb-0">
-                                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                                            aria-expanded="true" aria-controls="collapseOne">
+                                        <button type="button" class="btn btn-link" data-toggle="collapse"
+                                            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                             Education History
                                         </button>
                                     </h5>
@@ -100,7 +100,8 @@
                                                         class="btn btn-danger btn-sm remove-education">Remove</button>
                                                 </div>
                                             @endforeach
-                                            <button type="button" class="btn btn-primary btn-sm mt-2" id="add_education">Add
+                                            <button type="button" class="btn btn-primary btn-sm mt-2"
+                                                id="add_education">Add
                                                 Education</button>
                                         </div>
 
@@ -176,8 +177,7 @@
                                                         class="btn btn-danger btn-sm remove-skill">Remove</button>
                                                 </div>
                                             @endforeach
-                                            <button type="button"
-                                            class="btn btn-primary btn-sm mt-2" id="add_skill">Add
+                                            <button type="button" class="btn btn-primary btn-sm mt-2" id="add_skill">Add
                                                 Skill</button>
                                         </div>
 
@@ -188,9 +188,8 @@
 
                         <!-- Submit Button -->
                         <div class="form-group text-center">
-                            <button type="submit"
-                                id="editApplication"
-                                class="btn btn-success">Update Application</button>
+                            <button type="submit" id="editApplication" class="btn btn-success">Update
+                                Application</button>
                         </div>
                     </form>
                 </div>
@@ -278,12 +277,13 @@
         <script>
             // Add education entry
             $('#add_education').click(function() {
-                var educationHtml = `<div class="education-entry">
-            <input type="text" name="education[][institution_name]" class="form-control mb-2" placeholder="Institution Name" required>
-            <input type="text" name="education[][degree]" class="form-control mb-2" placeholder="Degree" required>
-            <input type="text" name="education[][year_of_completion]" class="form-control mb-2" placeholder="Year of Completion" required>
-            <button type="button" class="btn btn-danger remove-education">Remove</button>
-        </div>`;
+                var educationHtml = `
+                <div class="education-entry">
+                    <input type="text" name="education[][institution_name]" class="form-control mb-2" placeholder="Institution Name" required>
+                    <input type="text" name="education[][degree]" class="form-control mb-2" placeholder="Degree" required>
+                    <input type="text" name="education[][year_of_completion]" class="form-control mb-2" placeholder="Year of Completion" required>
+                    <button type="button" class="btn btn-danger remove-education">Remove</button>
+                </div>`;
                 $('#education_fields').append(educationHtml);
             });
 
@@ -294,12 +294,13 @@
 
             // Add work experience entry
             $('#add_work_experience').click(function() {
-                var workExperienceHtml = `<div class="work-experience-entry">
-            <input type="text" name="work_experience[][company_name]" class="form-control mb-2" placeholder="Company Name" required>
-            <input type="text" name="work_experience[][role]" class="form-control mb-2" placeholder="Role" required>
-            <input type="text" name="work_experience[][duration]" class="form-control mb-2" placeholder="Duration" required>
-            <button type="button" class="btn btn-danger remove-work-experience">Remove</button>
-        </div>`;
+                var workExperienceHtml = `
+                <div class="work-experience-entry">
+                    <input type="text" name="work_experience[][company_name]" class="form-control mb-2" placeholder="Company Name" required>
+                    <input type="text" name="work_experience[][role]" class="form-control mb-2" placeholder="Role" required>
+                    <input type="text" name="work_experience[][duration]" class="form-control mb-2" placeholder="Duration" required>
+                    <button type="button" class="btn btn-danger remove-work-experience">Remove</button>
+                </div>`;
                 $('#work_experience_fields').append(workExperienceHtml);
             });
 
@@ -315,8 +316,7 @@
             <div class="skill-entry mb-2">
                 <input type="text" name="skills[]" class="form-control mb-2" placeholder="Skill" required>
                 <button type="button" class="btn btn-danger remove-skill">Remove</button>
-            </div>
-        `;
+            </div>`;
                 $(this).before(skillHtml);
             });
 
@@ -324,8 +324,6 @@
             $(document).on('click', '.remove-skill', function() {
                 $(this).closest('.skill-entry').remove();
             });
-
-
         </script>
     @endsection
 @endsection
